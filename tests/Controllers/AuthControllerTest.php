@@ -140,4 +140,23 @@ class AuthControllerTest extends TestCase
             [['hot@hot.net' => 'asdsad']],
         );
     }
+
+    /**
+     * @test
+     * */
+    public function isRestoringMessageSends()
+    {
+        $this->mock = $this->getMockBuilder( EmailService::class )
+
+                            ->getMock();
+
+        $this->mock->expects($this->at(0))->method('setMessage')->with('message');
+        $this->mock->expects($this->at(1))->method('send')->with('t@t.com');
+
+        $this->controller = new AuthController( '', $this->mock );
+        $res = $this->controller->sendRestoringMessage( 'message', 't@t.com' );
+
+        $this->assertEquals(true,$res);
+
+    }
 }
