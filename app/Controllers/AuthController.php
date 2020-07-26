@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Services\EmailService;
+use Exception;
 
 class AuthController
 {
@@ -37,7 +38,7 @@ class AuthController
 
     public function restorePassword( $request )
     {
-        $isCreatedUser = $this->userService->get( $request->username );
+        $isCreatedUser = $this->getByEmail( $request->username );
 
         if ( ! $isCreatedUser ) {
             return 'You are not registered.';
@@ -52,5 +53,20 @@ class AuthController
         }
 
         return true;
+    }
+
+    public function getByEmail( $email )
+    {
+        if( ! filter_var($email, FILTER_VALIDATE_EMAIL) ){
+            throw new \Exception('Email isn\'t correct');
+        }
+
+        $user = $this->userService->get( $email );
+
+        if( ! empty( $user ) ){
+            return $user;
+        }
+
+        return false;
     }
 }

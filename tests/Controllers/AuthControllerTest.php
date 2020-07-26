@@ -98,4 +98,18 @@ class AuthControllerTest extends TestCase
 
         $this->assertEquals("Success!", $res);
     }
+
+    /**
+     * @test
+     * */
+    public function ifEmailIsNotCorrect()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Email isn\'t correct');
+
+        $this->controller = new AuthController( (new UserService), (new EmailService) );
+        $email = 'asd@';
+
+        $res = $this->controller->getByEmail($email);
+    }
 }
