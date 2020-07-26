@@ -112,4 +112,32 @@ class AuthControllerTest extends TestCase
 
         $res = $this->controller->getByEmail($email);
     }
+
+    /**
+     * @test
+     * @dataProvider providerUsers
+     * */
+    public function isRestoringFilterUsersCorrectly( $users )
+    {
+        $email = 'test@test.com';
+
+        $this->userServiceMock = $this->createMock( UserService::class );
+        $this->userServiceMock->expects($this->once())
+                                ->method('getAll')
+                                ->will( $this->returnValue($users) );
+
+        $this->controller = new AuthController( $this->userServiceMock );
+        $res = $this->controller->restorePassword( $email );
+
+        $this->assertEquals('You are not registered.',$res);
+
+    }
+
+    public function providerUsers() {
+        return array(
+            [['user1' => 1]],
+            [['test@test.co' => 'afff']],
+            [['hot@hot.net' => 'asdsad']],
+        );
+    }
 }

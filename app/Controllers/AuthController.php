@@ -36,17 +36,25 @@ class AuthController
         return 'Please provide correct username and password.';
     }
 
-    public function restorePassword( $request )
+    public function restorePassword( $email )
     {
-        $isCreatedUser = $this->getByEmail( $request->username );
+        $users = $this->userService->getAll();
 
-        if ( ! $isCreatedUser ) {
-            return 'You are not registered.';
+        foreach ($users as $key => $value) {
+            if( $email === $key ) {
+
+                $this->sendRestoringMessage('Your password changed.', $email);
+            }
         }
 
-        $this->emailService->setMessage('You password changed.');
+        return 'You are not registered.';
+    }
 
-        $this->emailService->send();
+    public function sendRestoringMessage( $msg, $email )
+    {
+        $this->emailService->setMessage( $msg );
+
+        $this->emailService->send($email);
 
         if( ! $this->emailService ){
             return false;

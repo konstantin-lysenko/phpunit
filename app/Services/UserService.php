@@ -9,6 +9,11 @@ class UserService
         return 1;
     }
 
+    public function getAll()
+    {
+        return 1;
+    }
+
     public function login()
     {
         return 1;
